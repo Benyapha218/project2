@@ -1,0 +1,26 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('./config/db');
+const ownerRoutes = require('./routes/ownerRoutes');
+const gardenRoutes = require('./routes/gardenRoutes'); 
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(express.json());
+
+// serve ไฟล์ frontend ทั้งหมดจากโฟลเดอร์ public
+app.use(express.static('public'));
+
+// เส้นทาง API สำหรับเจ้าของสวน
+app.use('/api/owner', ownerRoutes);
+app.use('/api/owner', gardenRoutes);
+
+// เชื่อมต่อ MongoDB แล้วค่อยเปิด server
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server กำลังรันที่ http://127.0.0.1:${PORT}`);
+  });
+});
